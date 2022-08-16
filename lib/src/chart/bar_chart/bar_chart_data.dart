@@ -686,6 +686,9 @@ class BarTouchTooltipData with EquatableMixin {
   /// The tooltip border color.
   final BorderSide tooltipBorder;
 
+  /// The tooltip shadow.
+  final BoxShadow tooltipShadow;
+
   /// if [BarTouchData.handleBuiltInTouches] is true,
   /// [BarChart] shows a tooltip popup on top of rods automatically when touch happens,
   /// otherwise you can show it manually using [BarChartGroupData.showingTooltipIndicators].
@@ -711,6 +714,7 @@ class BarTouchTooltipData with EquatableMixin {
     TooltipDirection? direction,
     double? rotateAngle,
     BorderSide? tooltipBorder,
+    BoxShadow? tooltipShadow,
   })  : tooltipBgColor = tooltipBgColor ?? Colors.blueGrey.darken(15),
         tooltipRoundedRadius = tooltipRoundedRadius ?? 4,
         tooltipPadding = tooltipPadding ??
@@ -723,6 +727,7 @@ class BarTouchTooltipData with EquatableMixin {
         direction = direction ?? TooltipDirection.auto,
         rotateAngle = rotateAngle ?? 0.0,
         tooltipBorder = tooltipBorder ?? BorderSide.none,
+        tooltipShadow = tooltipShadow ?? const BoxShadow(color: Colors.transparent),
         super();
 
   /// Used for equality check, see [EquatableMixin].
@@ -738,6 +743,7 @@ class BarTouchTooltipData with EquatableMixin {
         fitInsideVertically,
         rotateAngle,
         tooltipBorder,
+        tooltipShadow,
       ];
 }
 

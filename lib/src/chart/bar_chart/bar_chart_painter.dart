@@ -17,7 +17,8 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
   late Paint _barPaint,
       _barStrokePaint,
       _bgTouchTooltipPaint,
-      _borderTouchTooltipPaint;
+      _borderTouchTooltipPaint,
+      _shadowTouchTooltipPaint;
 
   List<GroupBarsPosition>? _groupBarsPosition;
 
@@ -39,6 +40,11 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
 
     _borderTouchTooltipPaint = Paint()
       ..style = PaintingStyle.stroke
+      ..color = Colors.transparent
+      ..strokeWidth = 1.0;
+
+    _shadowTouchTooltipPaint = Paint()
+      ..style = PaintingStyle.fill
       ..color = Colors.transparent
       ..strokeWidth = 1.0;
   }
@@ -426,12 +432,22 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
       _borderTouchTooltipPaint.strokeWidth = tooltipData.tooltipBorder.width;
     }
 
+    /// draw shadow
+    final shadowRect = roundedRect.inflate(tooltipData.tooltipShadow.spreadRadius);
+    _shadowTouchTooltipPaint.color = tooltipData.tooltipShadow.color;
+    _shadowTouchTooltipPaint.maskFilter = MaskFilter.blur(
+        tooltipData.tooltipShadow.blurStyle,
+        tooltipData.tooltipShadow.blurRadius);
+
     canvasWrapper.drawRotated(
       size: rect.size,
       rotationOffset: rectRotationOffset,
       drawOffset: rectDrawOffset,
       angle: rotateAngle,
       drawCallback: () {
+        canvasWrapper.drawRRect(shadowRect, _shadowTouchTooltipPaint);
+        canvasWrapper.translate(tooltipData.tooltipShadow.offset.dx,
+            tooltipData.tooltipShadow.offset.dy);
         canvasWrapper.drawRRect(roundedRect, _bgTouchTooltipPaint);
         canvasWrapper.drawRRect(roundedRect, _borderTouchTooltipPaint);
         canvasWrapper.drawText(tp, drawOffset);
