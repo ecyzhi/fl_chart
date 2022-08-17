@@ -140,6 +140,7 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
         final borderRadius =
             barRod.borderRadius ?? BorderRadius.circular(barRod.width / 2);
         final borderSide = barRod.borderSide;
+        final boxShadow = barRod.boxShadow;
 
         final x = groupBarsPosition[i].barsX[j];
 
@@ -241,6 +242,7 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
             barRod.gradient,
             barRRect.getRect(),
           );
+          paintShadow(canvasWrapper, barRRect, boxShadow, borderRadius);
           canvasWrapper.drawRRect(barRRect, _barPaint);
 
           // draw border stroke
@@ -279,6 +281,23 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
         }
       }
     }
+  }
+
+  @visibleForTesting
+  void paintShadow(CanvasWrapper canvasWrapper, RRect barRRect,
+      BoxShadow? boxShadow, BorderRadius borderRadius) {
+    if (boxShadow == null) return;
+
+    final RRect bounds = RRect.fromLTRBAndCorners(
+            barRRect.left, barRRect.top, barRRect.right, barRRect.bottom,
+            topLeft: borderRadius.topLeft,
+            topRight: borderRadius.topRight,
+            bottomLeft: borderRadius.bottomLeft,
+            bottomRight: borderRadius.bottomRight)
+        .shift(boxShadow.offset)
+        .inflate(boxShadow.spreadRadius);
+
+    canvasWrapper.drawRRect(bounds, boxShadow.toPaint());
   }
 
   @visibleForTesting
